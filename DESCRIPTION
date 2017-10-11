@@ -2,12 +2,13 @@ Package: loanportr
 Type: Package
 Title: Loan portfolio analysis in R
 Version: 0.1.0
-Author: Naas van Heerden, Dan de Villiers
-Maintainer: naas@theprofittable.com
+Authors@R: person("Naas", "van Heerden", email = "naas@theprofittable.com",
+  role = c("aut", "cre"))
 Description: Functions that make reporting on and analysing a loan portfolio easy. Needs the data to be in the standard TPT format
 License: gpl 3.0
 Encoding: UTF-8
 LazyData: true
-Depends: plyr, dplyr
+Depends: plyr, dplyr, rlang, tidyr
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
+RoxygenNote: 6.0.1
