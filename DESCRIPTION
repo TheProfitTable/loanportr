@@ -4,11 +4,15 @@ Title: Loan portfolio analysis in R
 Version: 0.1.0
 Authors@R: person("Naas", "van Heerden", email = "naas@theprofittable.com",
   role = c("aut", "cre"))
-Description: Functions that make reporting on and analysing a loan portfolio easy. Needs the data to be in the standard TPT format
+Description: Functions that make reporting on and analysing a loan portfolio easy. 
+    Needs the data to be in the standard TPT data dictionary format.
 License: gpl 3.0
 Encoding: UTF-8
 LazyData: true
-Depends: plyr, dplyr, rlang, tidyr
+Imports: 
+  dplyr (>= 0.7.3), 
+  rlang (>= 0.1.2), 
+  tidyr (>= 0.7.1)
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
