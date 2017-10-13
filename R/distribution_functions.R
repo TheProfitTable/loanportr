@@ -64,6 +64,15 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
   # pointintime_month
   df_orig <- make_orig(data, ...)
 
+  if (is.null(as.null(weight))) {
+    weight <- as.null(weight)
+  } else {
+    weight <- as.name(eval(weight))
+  }
+
+  var <- as.name(eval(var))
+  datedim <- as.name(eval(datedim))
+
   var <- enquo(var)
   datedim <- enquo(datedim)
   weight <- enquo(weight)
@@ -88,11 +97,13 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
 #' @param data a monthly loan performance level data frame in standard
 #'   \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
 #'    dictionary}  format
-#' @param var the variable by which you wish to show the monthly distribution
-#' @param weight either NULL or a weight variable such as loan_amount or
-#'   closingbalance. When NULL the weight is count of contracts.
+#' @param var the variable by which you wish to show the monthly distribution.
+#'   Must be a "string".
+#' @param weight either "NULL" or a weight variable such as "loan_amount" or
+#'   "closingbalance". When "NULL" the weight is count of contracts. Note, must
+#'   be entered as a "string".
 #' @param datedim the date field by which you wish to show the distribution.
-#'   Usually orig_month or fpd_month. pointintime_month coming soon.
+#'   Usually "orig_month" or "fpd_month". "pointintime_month" coming soon. Must be entered as a "string".
 #' @param ... parameters used in \code{\link{make_orig}} function.
 #'
 #' @return a data frame with unique datedim in first column. other columns are
@@ -108,11 +119,11 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
 #' df_vda <- vardistr_amnt(df, fico_bin, loan_amount, orig_month)
 vardistr_perc <- function(data, var, weight, datedim, ...) {
 
-  var <- enquo(var)
-  datedim <- enquo(datedim)
-  weight <- enquo(weight)
+  #var <- enquo(var)
+  #datedim <- enquo(datedim)
+  #weight <- enquo(weight)
 
-  df_vda <- vardistr_amnt(data, !!var, !!weight, !!datedim, ...)
+  df_vda <- vardistr_amnt(data, var, weight, datedim, ...)
 
   ncol <- ncol(df_vda) - 1
 

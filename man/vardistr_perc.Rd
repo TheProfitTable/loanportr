@@ -14,13 +14,15 @@ vardistr_perc(data, var, weight, datedim, ...)
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
  dictionary}  format}
 
-\item{var}{the variable by which you wish to show the monthly distribution}
+\item{var}{the variable by which you wish to show the monthly distribution.
+Must be a "string".}
 
-\item{weight}{either NULL or a weight variable such as loan_amount or
-closingbalance. When NULL the weight is count of contracts.}
+\item{weight}{either "NULL" or a weight variable such as "loan_amount" or
+"closingbalance". When "NULL" the weight is count of contracts. Note, must
+be entered as a "string".}
 
 \item{datedim}{the date field by which you wish to show the distribution.
-Usually orig_month or fpd_month. pointintime_month coming soon.}
+Usually "orig_month" or "fpd_month". "pointintime_month" coming soon. Must be entered as a "string".}
 
 \item{...}{parameters used in \code{\link{make_orig}} function.}
 }
