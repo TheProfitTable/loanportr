@@ -94,8 +94,11 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
 # }
 #
 # df_arrflags_sum <- df_arrflags %>%
+#   filter(fpd_period == 1) %>%
 #   group_by(orig_month) %>%
-#   summarise(arr_flag_1 = sum())
+#   summarise(arr_flag_1_count = sum(arr_flag_1) / n(),
+#             arr_flag_1_loan_amount = sum(arr_flag_1*loan_amount) / sum(loan_amount),
+#             arr_flag_1_closing_balance = sum(arr_flag_1*closing_balance) / sum(closing_balance))
 
 
 # By orig_month: arr1 = sum(flag1) / sum(all)
