@@ -4,15 +4,18 @@
 \alias{vintalyse}
 \title{vintalyse}
 \usage{
-vintalyse(data, ...)
+vintalyse(data, period_dim = "loan_period", month_dim = "orig_month")
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
- dictionary}  format}
+dictionary} format}
 
-\item{...}{date parameters to group by. Usually either loan_period,
-orig_month or fpd_period, fpd_month.}
+\item{period_dim}{the name of the period dimension used to do the vintage analysis. Usually either
+"loan_period" or "fpd_period". Note, must be input as a "string".}
+
+\item{month_dim}{the name of the month dimension used to do the vintage analysis. Usually either
+"orig_month" or "fpd_month". Note, must be input as a "string".}
 }
 \value{
 A data set used for plotting default vintage analysis.
@@ -24,6 +27,6 @@ produces
 to be generalised to work for any flag. not just default.
 }
 \examples{
-default_summary <- vintalyse(df, loan_period, orig_month)
+default_summary <- vintalyse(df, "loan_period", "orig_month")
 
 }

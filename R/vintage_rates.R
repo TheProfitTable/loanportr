@@ -5,21 +5,31 @@
 
 #' @title vintalyse
 #' @description produces
+#'
 #' @param data a monthly loan performance level data frame in standard
 #'   \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
-#'    dictionary}  format
-#' @param ... date parameters to group by. Usually either loan_period,
-#'   orig_month or fpd_period, fpd_month.
+#'   dictionary} format
+#' @param period_dim the name of the period dimension used to do the vintage analysis. Usually either
+#' "loan_period" or "fpd_period". Note, must be input as a "string".
+#' @param month_dim the name of the month dimension used to do the vintage analysis. Usually either
+#' "orig_month" or "fpd_month". Note, must be input as a "string".
 #'
 #' @return A data set used for plotting default vintage analysis.
 #' @export
 #' @note to be generalised to work for any flag. not just default.
 #' @examples
-#' default_summary <- vintalyse(df, loan_period, orig_month)
+#' default_summary <- vintalyse(df, "loan_period", "orig_month")
 #'
-vintalyse <- function(data, ...) {
+vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month")  {
+
+  period_dim <- as.name(eval(period_dim))
+  month_dim <- as.name(eval(month_dim))
+
+  period_dim <- enquo(period_dim)
+  month_dim <- enquo(month_dim)
+
   default_summary <- df %>%
-    group_by(...) %>% # Define the grouping variables
+    group_by(!!period_dim, !!month_dim) %>% # Define the grouping variables
     summarise( # Now you define your summary variables with a name and a function...
       total_count = n(),  # The function n() in dlpyr gives you the number of observations
       default_count = sum(default_flag ,na.rm = TRUE),
@@ -33,7 +43,8 @@ vintalyse <- function(data, ...) {
     )
   return(default_summary)
 }
-#
+
+
 
 
 
