@@ -4,18 +4,29 @@
 \alias{vintalyse}
 \title{vintalyse}
 \usage{
-vintalyse(data, period_dim = "loan_period", month_dim = "orig_month")
+vintalyse(data, period_dim = "loan_period", month_dim = "orig_month",
+  nosegment = TRUE, var)
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
-dictionary} format}
+ dictionary} format}
 
-\item{period_dim}{the name of the period dimension used to do the vintage analysis. Usually either
-"loan_period" or "fpd_period". Note, must be input as a "string".}
+\item{period_dim}{the name of the period dimension used to do the vintage
+analysis. Usually either "loan_period" or "fpd_period". Note, must be input
+as a "string".}
 
-\item{month_dim}{the name of the month dimension used to do the vintage analysis. Usually either
-"orig_month" or "fpd_month". Note, must be input as a "string".}
+\item{month_dim}{the name of the month dimension used to do the vintage
+analysis. Usually either "orig_month" or "fpd_month". Note, must be input
+as a "string".}
+
+\item{nosegment}{TRUE or FALSE. Default = TRUE. When TRUE then no
+segmentation will be done when doing vintage analysis. If FALSE, then
+segmentation will be done according to the variable entered as var. If
+FALSE, then a value for var must be provided.}
+
+\item{var}{the variable to segment the vintage analysis by. Must be provided
+as "string" and must be a categorical variable. See Note below.}
 }
 \value{
 A data set used for plotting default vintage analysis.
@@ -24,9 +35,12 @@ A data set used for plotting default vintage analysis.
 produces
 }
 \note{
-to be generalised to work for any flag. not just default.
+Each level of the var pararmeter needs to have sufficient volume to
+  produce meaningful results. When creating a plot for the vintage analysis,
+  the var parameter needs to be either filtered upon or used to create a
+  grid.
 }
 \examples{
 default_summary <- vintalyse(df, "loan_period", "orig_month")
-
+default_summary_var <- vintalyse(df, "loan_period", "orig_month", nosegment = FALSE, var = "fico_bin")
 }
