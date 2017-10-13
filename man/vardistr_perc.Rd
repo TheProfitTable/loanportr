@@ -40,9 +40,9 @@ turns loan level data to monthly distributions
 }}
 
 \examples{
-df_vdp_test <- vardistr_perc(df, fico_bin, loan_amount, orig_month, use_period = TRUE, period = fpd_period)
-df_vdp_test <- vardistr_perc(df, fico_bin, NULL, fpd_month)
+df_vdp_test <- vardistr_perc(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period = fpd_period)
+df_vdp_test <- vardistr_perc(df, "fico_bin", "NULL", "fpd_month")
 
-df_vda <- vardistr_amnt(df, fico_bin, loan_amount, orig_month, use_period = TRUE, period=fpd_period)
-df_vda <- vardistr_amnt(df, fico_bin, loan_amount, orig_month)
+df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period=fpd_period)
+df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month")
 }
