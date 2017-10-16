@@ -13,7 +13,7 @@ is_null_string(w)
 TRUE or FALSE. Returns TRUE if the string is "NULL"
 }
 \note{
-for use when writing functions with dplyr where function needs string as inpu.
+for use when writing functions with dplyr where function needs string as input.
 }
 \examples{
 is_null_string("NULL")

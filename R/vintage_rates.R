@@ -82,26 +82,57 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
 # early default function
 # -----------------------
 
-# default_definition = 3
-# # build flags
-# # use either loan or fpd period to filter and build flags
-# df_arrflags <- df %>%
-#   filter(fpd_period <= default_definition)
-#
-# for (i in 1:default_definition) {
-#   df_arrflags <- df_arrflags %>%
-#       mutate(!!paste0("arr_flag_", i) := if_else(fpd_period == i & months_arrears == i, true = 1, false = 0))
-# }
-#
-# df_arrflags_sum <- df_arrflags %>%
-#   filter(fpd_period == 1) %>%
-#   group_by(orig_month) %>%
-#   summarise(arr_flag_1_count = sum(arr_flag_1) / n(),
-#             arr_flag_1_loan_amount = sum(arr_flag_1*loan_amount) / sum(loan_amount),
-#             arr_flag_1_closing_balance = sum(arr_flag_1*closing_balance) / sum(closing_balance))
+#' @title early_default
+#' @description Calculates early arrears rolls by first pay date vintage. I.e. %
+#'   loans in arrears bucket 1 at month 1 and arrears 2 in month 2 etc.
+#' @param df a monthly loan performance level data frame in standard
+#'   \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
+#'    dictionary} format
+#' @param default_definition the default definition applied to the loan
+#'   portfolio
+#'
+#' @return a data frame consisting of variables that represent the rate of roll straight
+#'   from origination through the various arrears buckets into default. I.e. if
+#'   the default definition is 3 then % of contracts that are in default in
+#'   month 3 (period since first pay date - fpd_period). As well as the % loans
+#'   in arrears 1 in month 1, 2 in month 2, etc. up to default.
+#' @note the rate is calculated based on the following weights: loan_amount,
+#'   count, closing_balance. A variable for each is included in the data frame.
+#' @export
+#'
+#' @examples
+#' df_arrflags_test <- early_default(df, default_definition = 3)
+#'
+early_default <- function(data, default_definition) {
 
+  df_arrflags <- data %>%
+    filter(fpd_period <= default_definition)
 
-# By orig_month: arr1 = sum(flag1) / sum(all)
+  # create early arrears flags
+  for (i in 1:default_definition) {
+    df_arrflags <- df_arrflags %>%
+      mutate(!!paste0("arr_flag_", i) := if_else(fpd_period == i & months_arrears == i, true = 1, false = 0))
+  }
+
+  # create table with dates to join to
+  df_arrflags_all <- df_arrflags %>% group_by(fpd_month) %>% summarise()
+
+  for (i in 1:default_definition) {
+    name <- as.name((paste0("arr_flag_", i)))
+
+    # must repeat this section in loop:
+    df_arrflags_sum <- df_arrflags %>%
+      filter(fpd_period == i) %>%
+      group_by(fpd_month) %>%
+      summarise(!!paste0("arr_flag_", i, "_count") := sum(UQ(name)) / n(),
+                !!paste0("arr_flag_", i, "_loan_amount") := sum(UQ(name)*loan_amount) / sum(loan_amount),
+                !!paste0("arr_flag_", i, "_closing_balance") := sum(UQ(name)*closing_balance) / sum(closing_balance))
+
+    df_arrflags_all <- inner_join(x = df_arrflags_sum, y = df_arrflags_all, by = "fpd_month")
+  }
+  return(df_arrflags_all)
+}
+
 # -----------------------
 
 
