@@ -10,7 +10,7 @@
 # import data
 # ------------
 # library(readr)
-# df <- read_rds("df.rds")
+df <- read_rds("df_fredmac.rds")
 # ------------
 
 # exmamples of what I want to do.
@@ -63,7 +63,12 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
   # could convert this fun for use in on book by adding if else here that also
   # assigns data directly to df_sales_vintage and use datedim =
   # pointintime_month
-  df_orig <- make_orig(data, ...)
+
+  if (datedim == "pointintime_month") {
+    df_orig <- data
+  } else {
+    df_orig <- make_orig(data, ...)
+  }
 
   if (is_null_string(weight)) {
     weight <- as.null(weight)
@@ -86,7 +91,7 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
   ncol <- ncol(df_sales_vintage)
   #names <- names(df_sales_vintage)
 
-  df_sales_vintage$total <- apply(X = df_sales_vintage[,c(2:ncol)], MARGIN =  1, FUN = sum)
+  df_sales_vintage$total <- apply(X = df_sales_vintage[,c(2:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
 
   return(df_sales_vintage)
 }
@@ -104,7 +109,9 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
 #'   "closingbalance". When "NULL" the weight is count of contracts. Note, must
 #'   be entered as a "string".
 #' @param datedim the date field by which you wish to show the distribution.
-#'   Usually "orig_month" or "fpd_month". "pointintime_month" coming soon. Must be entered as a "string".
+#'   Usually "orig_month" or "fpd_month". "pointintime_month" is used when point
+#'   in time distributions want to be done over time (book analysis). Must be
+#'   entered as a "string".
 #' @param ... parameters used in \code{\link{make_orig}} function.
 #'
 #' @return a data frame with unique datedim in first column. other columns are
@@ -118,6 +125,10 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
 #'
 #' df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period=fpd_period)
 #' df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month")
+#'
+#' x <- vardistr_perc(df, "disclosure", "net_advance", "pointintime_month")
+#' x <- vardistr_perc(df, "fico_bin", "closing_balance", "pointintime_month")
+#'
 vardistr_perc <- function(data, var, weight, datedim, ...) {
 
   #var <- enquo(var)
@@ -126,17 +137,7 @@ vardistr_perc <- function(data, var, weight, datedim, ...) {
 
   df_vda <- vardistr_amnt(data, var, weight, datedim, ...)
 
-  ncol <- ncol(df_vda) - 1
-
-  for (i in 2:ncol) {
-    name  <- as.name(names(df_vda[i])) # as name
-    nname <- paste0("perc_", names(df_vda[i])) # as string
-
-    total <- quo(total)
-
-    df_vda <- mutate(df_vda, !!nname := UQ(name) / UQ(total))
-  }
-  return(df_vda)
+  return(add_perc(df_vda))
 }
 
 
