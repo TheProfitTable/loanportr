@@ -22,7 +22,9 @@ Must be a "string".}
 be entered as a "string".}
 
 \item{datedim}{the date field by which you wish to show the distribution.
-Usually "orig_month" or "fpd_month". "pointintime_month" coming soon. Must be entered as a "string".}
+Usually "orig_month" or "fpd_month". "pointintime_month" is used when point
+in time distributions want to be done over time (book analysis). Must be
+entered as a "string".}
 
 \item{...}{parameters used in \code{\link{make_orig}} function.}
 }
@@ -45,4 +47,8 @@ df_vdp_test <- vardistr_perc(df, "fico_bin", "NULL", "fpd_month")
 
 df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period=fpd_period)
 df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month")
+
+x <- vardistr_perc(df, "disclosure", "net_advance", "pointintime_month")
+x <- vardistr_perc(df, "fico_bin", "closing_balance", "pointintime_month")
+
 }
