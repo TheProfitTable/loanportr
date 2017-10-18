@@ -46,7 +46,7 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
       summarise( # Now you define your summary variables with a name and a function...
         total_count = n(),  # The function n() in dlpyr gives you the number of observations
         default_count = sum(default_flag ,na.rm = TRUE),
-        default_perc = default_count / total_count,
+        default_perc_count = default_count / total_count,
         total_loan_amount = sum(loan_amount, na.rm = TRUE),
         default_loan_amount = sum(default_flag*loan_amount, na.rm = TRUE),
         default_perc_loan_amount = default_loan_amount / total_loan_amount,
@@ -65,7 +65,7 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
       summarise( # Now you define your summary variables with a name and a function...
         total_count = n(),  # The function n() in dlpyr gives you the number of observations
         default_count = sum(default_flag ,na.rm = TRUE),
-        default_perc = default_count / total_count,
+        default_perc_count = default_count / total_count,
         total_loan_amount = sum(loan_amount, na.rm = TRUE),
         default_loan_amount = sum(default_flag*loan_amount, na.rm = TRUE),
         default_perc_loan_amount = default_loan_amount / total_loan_amount,
@@ -103,7 +103,11 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
 #' @examples
 #' df_arrflags_test <- early_default(df, default_definition = 3)
 #'
-early_default <- function(data, default_definition) {
+early_default <- function(data, default_definition, var) {
+
+  var_string <- var
+  var <- as.name(eval(var))
+  var <- enquo(var)
 
   df_arrflags <- data %>%
     filter(fpd_period <= default_definition)
@@ -115,7 +119,7 @@ early_default <- function(data, default_definition) {
   }
 
   # create table with dates to join to
-  df_arrflags_all <- df_arrflags %>% group_by(fpd_month) %>% summarise()
+  df_arrflags_all <- df_arrflags %>% group_by(fpd_month, !!var) %>% summarise()
 
   for (i in 1:default_definition) {
     name <- as.name((paste0("arr_flag_", i)))
@@ -123,12 +127,12 @@ early_default <- function(data, default_definition) {
     # must repeat this section in loop:
     df_arrflags_sum <- df_arrflags %>%
       filter(fpd_period == i) %>%
-      group_by(fpd_month) %>%
+      group_by(fpd_month, !!var) %>%
       summarise(!!paste0("arr_flag_", i, "_count") := sum(UQ(name)) / n(),
                 !!paste0("arr_flag_", i, "_loan_amount") := sum(UQ(name)*loan_amount) / sum(loan_amount),
                 !!paste0("arr_flag_", i, "_closing_balance") := sum(UQ(name)*closing_balance) / sum(closing_balance))
 
-    df_arrflags_all <- inner_join(x = df_arrflags_sum, y = df_arrflags_all, by = "fpd_month")
+    df_arrflags_all <- inner_join(x = df_arrflags_sum, y = df_arrflags_all, by = c("fpd_month", var_string))
   }
   return(df_arrflags_all)
 }

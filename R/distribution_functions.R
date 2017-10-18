@@ -10,7 +10,7 @@
 # import data
 # ------------
 # library(readr)
-df <- read_rds("df_fredmac.rds")
+# df <- read_rds("df_fredmac.rds")
 # ------------
 
 # exmamples of what I want to do.
