@@ -90,56 +90,88 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
 #'    dictionary} format
 #' @param default_definition the default definition applied to the loan
 #'   portfolio
+#' @param var variable to segment the early arrears rates by. Must be a
+#'   "string". If = "NULL" there will be no segmentation.
 #'
-#' @return a data frame consisting of variables that represent the rate of roll straight
-#'   from origination through the various arrears buckets into default. I.e. if
-#'   the default definition is 3 then % of contracts that are in default in
-#'   month 3 (period since first pay date - fpd_period). As well as the % loans
-#'   in arrears 1 in month 1, 2 in month 2, etc. up to default.
+#' @return a data frame consisting of variables that represent the rate of roll
+#'   straight from origination through the various arrears buckets into default.
+#'   I.e. if the default definition is 3 then % of contracts that are in default
+#'   in month 3 (period since first pay date - fpd_period). As well as the %
+#'   loans in arrears 1 in month 1, 2 in month 2, etc. up to default.
 #' @note the rate is calculated based on the following weights: loan_amount,
 #'   count, closing_balance. A variable for each is included in the data frame.
 #' @export
 #'
 #' @examples
-#' df_arrflags_test <- early_default(df, default_definition = 3)
+#' df_arrflags_test <- early_default(df, default_definition = 3, var = "NULL")
+#' df_arrflags_test <- early_default(df, default_definition = 3, var = "fico_bin")
 #'
 early_default <- function(data, default_definition, var) {
+    # no segmentation
+  if (is_null_string(var)) {
 
-  var_string <- var
-  var <- as.name(eval(var))
-  var <- enquo(var)
+    df_arrflags <- data %>%
+      filter(fpd_period <= default_definition)
 
-  df_arrflags <- data %>%
-    filter(fpd_period <= default_definition)
+    # create early arrears flags
+    for (i in 1:default_definition) {
+      df_arrflags <- df_arrflags %>%
+        mutate(!!paste0("arr_flag_", i) := if_else(fpd_period == i & months_arrears == i, true = 1, false = 0))
+    }
 
-  # create early arrears flags
-  for (i in 1:default_definition) {
-    df_arrflags <- df_arrflags %>%
-      mutate(!!paste0("arr_flag_", i) := if_else(fpd_period == i & months_arrears == i, true = 1, false = 0))
-  }
+    # create table with dates to join to9
+    df_arrflags_all <- df_arrflags %>% group_by(fpd_month) %>% summarise() #test
 
-  # create table with dates to join to
-  df_arrflags_all <- df_arrflags %>% group_by(fpd_month, !!var) %>% summarise()
+    for (i in 1:default_definition) {
+      name <- as.name((paste0("arr_flag_", i)))
 
-  for (i in 1:default_definition) {
-    name <- as.name((paste0("arr_flag_", i)))
+      # must repeat this section in loop:
+      df_arrflags_sum <- df_arrflags %>%
+        filter(fpd_period == i) %>%
+        group_by(fpd_month) %>% #var
+        summarise(!!paste0("arr_flag_", i, "_count") := sum(UQ(name)) / n(),
+                  !!paste0("arr_flag_", i, "_loan_amount") := sum(UQ(name)*loan_amount) / sum(loan_amount),
+                  !!paste0("arr_flag_", i, "_closing_balance") := sum(UQ(name)*closing_balance) / sum(closing_balance))
 
-    # must repeat this section in loop:
-    df_arrflags_sum <- df_arrflags %>%
-      filter(fpd_period == i) %>%
-      group_by(fpd_month, !!var) %>%
-      summarise(!!paste0("arr_flag_", i, "_count") := sum(UQ(name)) / n(),
-                !!paste0("arr_flag_", i, "_loan_amount") := sum(UQ(name)*loan_amount) / sum(loan_amount),
-                !!paste0("arr_flag_", i, "_closing_balance") := sum(UQ(name)*closing_balance) / sum(closing_balance))
+      df_arrflags_all <- inner_join(x = df_arrflags_sum, y = df_arrflags_all, by = c("fpd_month")) #var
+    }
 
-    df_arrflags_all <- inner_join(x = df_arrflags_sum, y = df_arrflags_all, by = c("fpd_month", var_string))
+    #segmantation
+  } else {
+    by_var <- c("fpd_month", var)
+    var <- as.name(eval(var))
+    var <- enquo(var)
+
+    df_arrflags <- data %>%
+      filter(fpd_period <= default_definition)
+
+    # create early arrears flags
+    for (i in 1:default_definition) {
+      df_arrflags <- df_arrflags %>%
+        mutate(!!paste0("arr_flag_", i) := if_else(fpd_period == i & months_arrears == i, true = 1, false = 0))
+    }
+
+    # create table with dates to join to9
+    df_arrflags_all <- df_arrflags %>% group_by(fpd_month, !!var) %>% summarise() #test
+
+    for (i in 1:default_definition) {
+      name <- as.name((paste0("arr_flag_", i)))
+
+      # must repeat this section in loop:
+      df_arrflags_sum <- df_arrflags %>%
+        filter(fpd_period == i) %>%
+        group_by(fpd_month, !!var) %>% #var
+        summarise(!!paste0("arr_flag_", i, "_count") := sum(UQ(name)) / n(),
+                  !!paste0("arr_flag_", i, "_loan_amount") := sum(UQ(name)*loan_amount) / sum(loan_amount),
+                  !!paste0("arr_flag_", i, "_closing_balance") := sum(UQ(name)*closing_balance) / sum(closing_balance))
+
+      df_arrflags_all <- inner_join(x = df_arrflags_sum, y = df_arrflags_all, by = by_var) #var
+    }
   }
   return(df_arrflags_all)
 }
 
 # -----------------------
-
-
 
 
 # arrange to make viewing easier.

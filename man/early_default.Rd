@@ -4,22 +4,25 @@
 \alias{early_default}
 \title{early_default}
 \usage{
-early_default(data, default_definition)
+early_default(data, default_definition, var)
 }
 \arguments{
 \item{default_definition}{the default definition applied to the loan
 portfolio}
+
+\item{var}{variable to segment the early arrears rates by. Must be a
+"string". If = "NULL" there will be no segmentation.}
 
 \item{df}{a monthly loan performance level data frame in standard
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
  dictionary} format}
 }
 \value{
-a data frame consisting of variables that represent the rate of roll straight
-  from origination through the various arrears buckets into default. I.e. if
-  the default definition is 3 then % of contracts that are in default in
-  month 3 (period since first pay date - fpd_period). As well as the % loans
-  in arrears 1 in month 1, 2 in month 2, etc. up to default.
+a data frame consisting of variables that represent the rate of roll
+  straight from origination through the various arrears buckets into default.
+  I.e. if the default definition is 3 then % of contracts that are in default
+  in month 3 (period since first pay date - fpd_period). As well as the %
+  loans in arrears 1 in month 1, 2 in month 2, etc. up to default.
 }
 \description{
 Calculates early arrears rolls by first pay date vintage. I.e. %
@@ -30,6 +33,7 @@ the rate is calculated based on the following weights: loan_amount,
   count, closing_balance. A variable for each is included in the data frame.
 }
 \examples{
-df_arrflags_test <- early_default(df, default_definition = 3)
+df_arrflags_test <- early_default(df, default_definition = 3, var = "NULL")
+df_arrflags_test <- early_default(df, default_definition = 3, var = "fico_bin")
 
 }

@@ -11,6 +11,7 @@
 # ------------
 # library(readr)
 # df <- read_rds("df_fredmac.rds")
+# df <- read_rds("df.rds")
 # ------------
 
 # exmamples of what I want to do.
@@ -60,9 +61,6 @@ make_orig <- function(data, use_period = FALSE, period = loan_period, period_num
 
 #' @describeIn vardistr_perc This only returns the amounts in each var level and the Total
 vardistr_amnt <- function(data, var, weight, datedim, ...) {
-  # could convert this fun for use in on book by adding if else here that also
-  # assigns data directly to df_sales_vintage and use datedim =
-  # pointintime_month
 
   if (datedim == "pointintime_month") {
     df_orig <- data
