@@ -52,3 +52,25 @@ add_perc <- function(data) {
   return(df_amnt)
 }
 
+
+df_lead <- lead_default_flag(df, 12, "default_flag")
+
+#' @title string_to_quote
+#' @description convert a string to a quoted expression within a function
+#' @param string a character string that represents a variable or expression.
+#'   The input parameter to a function.
+#'
+#' @return returns the quoted version of the string.
+#' @export
+#' @note Only use inside a function. Variable should be unquoted via UQ() or !!
+#'   for use.
+#' @examples
+#' input <- string_to_quote(input) #where input is a parameter entered as string
+#'
+string_to_quote <- function(string) {
+  str <- as.name(string)
+  enquo(str)
+}
+
+
+
