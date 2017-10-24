@@ -53,8 +53,6 @@ add_perc <- function(data) {
 }
 
 
-df_lead <- lead_default_flag(df, 12, "default_flag")
-
 #' @title string_to_quote
 #' @description convert a string to a quoted expression within a function
 #' @param string a character string that represents a variable or expression.
