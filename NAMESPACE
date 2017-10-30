@@ -2,6 +2,8 @@
 
 export(add_perc)
 export(early_default)
+export(get_cohort_base)
+export(get_cohort_join)
 export(is_null_string)
 export(lead_flag)
 export(make_orig)

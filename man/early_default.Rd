@@ -7,15 +7,15 @@
 early_default(data, default_definition, var)
 }
 \arguments{
+\item{data}{a monthly loan performance level data frame in standard
+\href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
+ dictionary} format}
+
 \item{default_definition}{the default definition applied to the loan
 portfolio}
 
 \item{var}{variable to segment the early arrears rates by. Must be a
 "string". If = "NULL" there will be no segmentation.}
-
-\item{df}{a monthly loan performance level data frame in standard
-\href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
- dictionary} format}
 }
 \value{
 a data frame consisting of variables that represent the rate of roll

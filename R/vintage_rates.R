@@ -1,3 +1,16 @@
+
+# var
+# in: string
+# used in:
+#   group_by with date variables (sometimes dynamic) --> can be done with group_by_at and stringed vector
+#   to determine no segmentation vs segmentation, --> new variable: segmentation levels?
+#   to join (stringed vector), --> only need stringed vector
+# how?
+# put together stringed vector inside function: group_by_vector or join_vector
+
+
+
+
 # library(ggplot2)
 
 # need to put this into data wrangling
@@ -85,7 +98,7 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
 #' @title early_default
 #' @description Calculates early arrears rolls by first pay date vintage. I.e. %
 #'   loans in arrears bucket 1 at month 1 and arrears 2 in month 2 etc.
-#' @param df a monthly loan performance level data frame in standard
+#' @param data a monthly loan performance level data frame in standard
 #'   \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
 #'    dictionary} format
 #' @param default_definition the default definition applied to the loan
