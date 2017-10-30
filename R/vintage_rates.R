@@ -28,34 +28,40 @@
 #' @param month_dim the name of the month dimension used to do the vintage
 #'   analysis. Usually either "orig_month" or "fpd_month". Note, must be input
 #'   as a "string".
-#' @param nosegment TRUE or FALSE. Default = TRUE. When TRUE then no
-#'   segmentation will be done when doing vintage analysis. If FALSE, then
-#'   segmentation will be done according to the variable entered as var. If
-#'   FALSE, then a value for var must be provided.
-#' @param var the variable to segment the vintage analysis by. Must be provided
+#' @param segmenter_level 1, 2 or 3. Default = 1. When 1 then no
+#'   segmentation will be done when doing vintage analysis. If 2, then
+#'   segmentation will be done by to the variable entered as var1. If
+#'   3, then segmentation will be done by var1 and var2.
+#' @param var1 the main variable to segment the vintage analysis by. Must be provided
 #'   as "string" and must be a categorical variable. See Note below.
+#' @param var2 if a second level of segmentation is required, this is the second level.
 #'
 #' @return A data set used for plotting default vintage analysis.
 #' @export
-#' @note Each level of the var pararmeter needs to have sufficient volume to
+#' @note Each level of the var1 and var2 pararmeters need to have sufficient volume to
 #'   produce meaningful results. When creating a plot for the vintage analysis,
-#'   the var parameter needs to be either filtered upon or used to create a
+#'   the var1 and var2 parameters need to be either filtered upon or used to create a
 #'   grid.
 #' @examples
 #' default_summary <- vintalyse(df, "loan_period", "orig_month")
-#' default_summary_var <- vintalyse(df, "loan_period", "orig_month", nosegment = FALSE, var = "fico_bin")
-vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month", nosegment = TRUE, var)  {
+#' default_summary_var1 <- vintalyse(df, "loan_period", "orig_month", segmenter_level = 3, var1 = "fico_bin")
+#' default_summary_var2 <- vintalyse(df, "loan_period", "orig_month", segmenter_level = 3, var1 = "fico_bin", "occpy_sts")
+vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month", segmenter_level = 1, var1, var2)  {
 
-  period_dim <- as.name(eval(period_dim))
-  month_dim <- as.name(eval(month_dim))
+  # period_dim <- as.name(eval(period_dim))
+  # month_dim <- as.name(eval(month_dim))
+  #
+  # period_dim <- enquo(period_dim)
+  # month_dim <- enquo(month_dim)
 
-  period_dim <- enquo(period_dim)
-  month_dim <- enquo(month_dim)
+  group_by_vector <- switch(segmenter_level,
+                            c(period_dim, month_dim),
+                            c(period_dim, month_dim, var1),
+                            c(period_dim, month_dim, var1, var2))
 
-  if (nosegment) {
 
     default_summary <- df %>%
-      group_by(!!period_dim, !!month_dim) %>% # Define the grouping variables
+      group_by_at(group_by_vector) %>% # Define the grouping variables
       summarise( # Now you define your summary variables with a name and a function...
         total_count = n(),  # The function n() in dlpyr gives you the number of observations
         default_count = sum(default_flag ,na.rm = TRUE),
@@ -68,25 +74,9 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
         default_perc_closing_balance = default_closing_balance / total_closing_balance
       )
 
-  } else {
-
-    var <- as.name(eval(var))
-    var <- enquo(var)
-
-    default_summary <- df %>%
-      group_by(!!period_dim, !!month_dim, !!var) %>% # Define the grouping variables
-      summarise( # Now you define your summary variables with a name and a function...
-        total_count = n(),  # The function n() in dlpyr gives you the number of observations
-        default_count = sum(default_flag ,na.rm = TRUE),
-        default_perc_count = default_count / total_count,
-        total_loan_amount = sum(loan_amount, na.rm = TRUE),
-        default_loan_amount = sum(default_flag*loan_amount, na.rm = TRUE),
-        default_perc_loan_amount = default_loan_amount / total_loan_amount,
-        total_closing_balance =  sum(closing_balance, na.rm = TRUE),
-        default_closing_balance = sum(default_flag*closing_balance, na.rm = TRUE),
-        default_perc_closing_balance = default_closing_balance / total_closing_balance
-      )
-  }
+#
+#     var <- as.name(eval(var))
+#     var <- enquo(var)
 
   return(default_summary)
 

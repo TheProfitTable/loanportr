@@ -5,7 +5,7 @@
 \title{vintalyse}
 \usage{
 vintalyse(data, period_dim = "loan_period", month_dim = "orig_month",
-  nosegment = TRUE, var)
+  segmenter_level = 1, var1, var2)
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
@@ -20,13 +20,15 @@ as a "string".}
 analysis. Usually either "orig_month" or "fpd_month". Note, must be input
 as a "string".}
 
-\item{nosegment}{TRUE or FALSE. Default = TRUE. When TRUE then no
-segmentation will be done when doing vintage analysis. If FALSE, then
-segmentation will be done according to the variable entered as var. If
-FALSE, then a value for var must be provided.}
+\item{segmenter_level}{1, 2 or 3. Default = 1. When 1 then no
+segmentation will be done when doing vintage analysis. If 2, then
+segmentation will be done by to the variable entered as var1. If
+3, then segmentation will be done by var1 and var2.}
 
-\item{var}{the variable to segment the vintage analysis by. Must be provided
+\item{var1}{the main variable to segment the vintage analysis by. Must be provided
 as "string" and must be a categorical variable. See Note below.}
+
+\item{var2}{if a second level of segmentation is required, this is the second level.}
 }
 \value{
 A data set used for plotting default vintage analysis.
@@ -35,12 +37,13 @@ A data set used for plotting default vintage analysis.
 produces
 }
 \note{
-Each level of the var pararmeter needs to have sufficient volume to
+Each level of the var1 and var2 pararmeters need to have sufficient volume to
   produce meaningful results. When creating a plot for the vintage analysis,
-  the var parameter needs to be either filtered upon or used to create a
+  the var1 and var2 parameters need to be either filtered upon or used to create a
   grid.
 }
 \examples{
 default_summary <- vintalyse(df, "loan_period", "orig_month")
-default_summary_var <- vintalyse(df, "loan_period", "orig_month", nosegment = FALSE, var = "fico_bin")
+default_summary_var1 <- vintalyse(df, "loan_period", "orig_month", segmenter_level = 3, var1 = "fico_bin")
+default_summary_var2 <- vintalyse(df, "loan_period", "orig_month", segmenter_level = 3, var1 = "fico_bin", "occpy_sts")
 }
