@@ -3,7 +3,7 @@
 # in: string
 # used in:
 #   group_by with date variables (sometimes dynamic) --> can be done with group_by_at and stringed vector
-#   to determine no segmentation vs segmentation, --> new variable: segmentation levels?
+#   to determine no segmentation vs segmentation, --> new variable: segmentation_levels
 #   to join (stringed vector), --> only need stringed vector
 # how?
 # put together stringed vector inside function: group_by_vector or join_vector
