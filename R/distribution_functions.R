@@ -14,10 +14,8 @@
 # df <- read_rds("df.rds")
 # ------------
 
-# exmamples of what I want to do.
-# distribution of fico_bins by loan_amount over orig_month
-
-#' @title make_orig
+#' make_orig
+#' @title Make the loan data frame an origination level one
 #' @description condences monthly performance data set to origination level
 #' @param data a monthly loan performance level data frame in standard data
 #'   dictionary format
@@ -96,7 +94,8 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
 
 # ------------------------------
 
-#' @title vardistr_perc
+#' vardistr_perc
+#' @title Variable distribution over time
 #' @description turns loan level data to monthly distributions
 #' @param data a monthly loan performance level data frame in standard
 #'   \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data

@@ -2,9 +2,9 @@
 % Please edit documentation in R/vintage_rates.R
 \name{early_default}
 \alias{early_default}
-\title{early_default}
+\title{Early roll rates by vintage}
 \usage{
-early_default(data, default_definition, var)
+early_default(data, default_definition, segmenter_level, var1, var2)
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
@@ -14,8 +14,15 @@ early_default(data, default_definition, var)
 \item{default_definition}{the default definition applied to the loan
 portfolio}
 
-\item{var}{variable to segment the early arrears rates by. Must be a
-"string". If = "NULL" there will be no segmentation.}
+\item{segmenter_level}{1, 2 or 3. Default = 1. When 1 then no
+segmentation will be done when doing vintage analysis. If 2, then
+segmentation will be done by to the variable entered as var1. If
+3, then segmentation will be done by var1 and var2.}
+
+\item{var1}{the main variable to segment the vintage analysis by. Must be provided
+as "string" and must be a categorical variable. See Note below.}
+
+\item{var2}{if a second level of segmentation is required, this is the second level.}
 }
 \value{
 a data frame consisting of variables that represent the rate of roll
@@ -28,12 +35,17 @@ a data frame consisting of variables that represent the rate of roll
 Calculates early arrears rolls by first pay date vintage. I.e. %
   loans in arrears bucket 1 at month 1 and arrears 2 in month 2 etc.
 }
+\details{
+early_default
+}
 \note{
 the rate is calculated based on the following weights: loan_amount,
   count, closing_balance. A variable for each is included in the data frame.
+  fpd_month is used as the vintage grouping variable. This view only really
+  makes sense with fpd_month
 }
 \examples{
 df_arrflags_test <- early_default(df, default_definition = 3, var = "NULL")
-df_arrflags_test <- early_default(df, default_definition = 3, var = "fico_bin")
+df_arrflags_test_var1 <- early_default(df, default_definition = 3, var = "fico_bin")
 
 }

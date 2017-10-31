@@ -3,7 +3,7 @@
 \name{vardistr_amnt}
 \alias{vardistr_amnt}
 \alias{vardistr_perc}
-\title{vardistr_perc}
+\title{Variable distribution over time}
 \usage{
 vardistr_amnt(data, var, weight, datedim, ...)
 
@@ -35,6 +35,9 @@ a data frame with unique datedim in first column. other columns are
 }
 \description{
 turns loan level data to monthly distributions
+}
+\details{
+vardistr_perc
 }
 \section{Functions}{
 \itemize{
