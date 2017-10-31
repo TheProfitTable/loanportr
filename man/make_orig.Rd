@@ -2,7 +2,7 @@
 % Please edit documentation in R/distribution_functions.R
 \name{make_orig}
 \alias{make_orig}
-\title{make_orig}
+\title{Make the loan data frame an origination level one}
 \usage{
 make_orig(data, use_period = FALSE, period = loan_period,
   period_number = 1)
@@ -29,6 +29,9 @@ a loan level data set (should be unique on contract_key). for use in
 }
 \description{
 condences monthly performance data set to origination level
+}
+\details{
+make_orig
 }
 \examples{
 

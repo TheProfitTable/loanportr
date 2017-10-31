@@ -2,7 +2,7 @@
 % Please edit documentation in R/vintage_rates.R
 \name{vintalyse}
 \alias{vintalyse}
-\title{vintalyse}
+\title{Vintage analysis of loan default rates}
 \usage{
 vintalyse(data, period_dim = "loan_period", month_dim = "orig_month",
   segmenter_level = 1, var1, var2)
@@ -35,6 +35,9 @@ A data set used for plotting default vintage analysis.
 }
 \description{
 produces
+}
+\details{
+vintalyse
 }
 \note{
 Each level of the var1 and var2 pararmeters need to have sufficient volume to
