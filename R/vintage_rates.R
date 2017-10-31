@@ -106,8 +106,9 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
 #' @export
 #'
 #' @examples
-#' df_arrflags_test <- early_default(df, default_definition = 3, var = "NULL")
-#' df_arrflags_test_var1 <- early_default(df, default_definition = 3, var = "fico_bin")
+#' df_arrflags_test_var1_ <- early_default(df, default_definition = 3, segmenter_level = 1)
+#' df_arrflags_test_var1_ <- early_default(df, default_definition = 3,
+#' segmenter_level = 2, var1 = "fico_bin")
 #'
 early_default <- function(data, default_definition, segmenter_level, var1, var2) {
 

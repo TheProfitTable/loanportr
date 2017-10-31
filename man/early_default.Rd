@@ -45,7 +45,8 @@ the rate is calculated based on the following weights: loan_amount,
   makes sense with fpd_month
 }
 \examples{
-df_arrflags_test <- early_default(df, default_definition = 3, var = "NULL")
-df_arrflags_test_var1 <- early_default(df, default_definition = 3, var = "fico_bin")
+df_arrflags_test_var1_ <- early_default(df, default_definition = 3, segmenter_level = 1)
+df_arrflags_test_var1_ <- early_default(df, default_definition = 3,
+segmenter_level = 2, var1 = "fico_bin")
 
 }
