@@ -29,20 +29,22 @@
 #' @param month_dim the name of the month dimension used to do the vintage
 #'   analysis. Usually either "orig_month" or "fpd_month". Note, must be input
 #'   as a "string".
-#' @param segmenter_level 1, 2 or 3. Default = 1. When 1 then no
-#'   segmentation will be done when doing vintage analysis. If 2, then
-#'   segmentation will be done by to the variable entered as var1. If
-#'   3, then segmentation will be done by var1 and var2.
-#' @param var1 the main variable to segment the vintage analysis by. Must be provided
-#'   as "string" and must be a categorical variable. See Note below.
-#' @param var2 if a second level of segmentation is required, this is the second level.
+#' @param segmenter_level 1, 2 or 3. Default = 1. When 1 then no segmentation
+#'   will be done when doing vintage analysis. If 2, then segmentation will be
+#'   done by to the variable entered as var1. If 3, then segmentation will be
+#'   done by var1 and var2. It is very important to enter the correct value
+#'   here.
+#' @param var1 the main variable to segment the vintage analysis by. Must be
+#'   provided as "string" and must be a categorical variable. See Note below.
+#' @param var2 if a second level of segmentation is required, this is the second
+#'   level.
 #'
 #' @return A data set used for plotting default vintage analysis.
 #' @export
-#' @note Each level of the var1 and var2 pararmeters need to have sufficient volume to
-#'   produce meaningful results. When creating a plot for the vintage analysis,
-#'   the var1 and var2 parameters need to be either filtered upon or used to create a
-#'   grid.
+#' @note Each level of the var1 and var2 pararmeters need to have sufficient
+#'   volume to produce meaningful results. When creating a plot for the vintage
+#'   analysis, the var1 and var2 parameters need to be either filtered upon or
+#'   used to create a grid.
 #' @examples
 #' default_summary <- vintalyse(df, "loan_period", "orig_month")
 #' default_summary_var1 <- vintalyse(df, "loan_period", "orig_month", segmenter_level = 3, var1 = "fico_bin")

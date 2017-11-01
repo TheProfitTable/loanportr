@@ -5,9 +5,9 @@
 \alias{get_cohort_default}
 \title{get_cohort_base}
 \usage{
-get_cohort_base(data, default_definition, ...)
+get_cohort_base(data, default_definition, group_by_vector)
 
-get_cohort_default(data, default_definition, ...)
+get_cohort_default(data, default_definition, group_by_vector)
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
@@ -17,7 +17,8 @@ get_cohort_default(data, default_definition, ...)
 \item{default_definition}{the default definition applied to the loan
 portfolio}
 
-\item{...}{Segmenter variables. Can be more than one.}
+\item{group_by_vector}{Vector with string names of variables to be grouped
+by. Created in pd function.}
 }
 \value{
 A data frame containing the sum of closing balance by
@@ -35,16 +36,10 @@ segmenter variables where the event (e.g. default) has occured.
 }}
 
 \note{
-The cohort_base values essentially form the 'base' when
-  doing PD calculations. cohort_base and cohort_default form the
+The cohort_base values essentially form the 'base' when doing PD
+  calculations. cohort_base and cohort_default form the
 }
 \examples{
-# nested fico score and occupancy status segmentation
-df_cohort_base <- get_cohort_base(df, default_definition = 1, fico_bin, occpy_sts)
-# only one segmentation: fico score
-df_cohort_base <- get_cohort_base(df, default_definition = 3, fico_bin)
-# how to use:
-df_cohort_default <- df \%>\% lead_flag(., 12, "default_flag") \%>\%
-  get_cohort_default(., 3, fico_bin)
+get_cohort_base(df, 3, c("months_arrears", "pointintime_month"))
 
 }

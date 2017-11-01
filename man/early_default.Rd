@@ -14,15 +14,17 @@ early_default(data, default_definition, segmenter_level, var1, var2)
 \item{default_definition}{the default definition applied to the loan
 portfolio}
 
-\item{segmenter_level}{1, 2 or 3. Default = 1. When 1 then no
-segmentation will be done when doing vintage analysis. If 2, then
-segmentation will be done by to the variable entered as var1. If
-3, then segmentation will be done by var1 and var2.}
+\item{segmenter_level}{1, 2 or 3. Default = 1. When 1 then no segmentation
+will be done when doing vintage analysis. If 2, then segmentation will be
+done by to the variable entered as var1. If 3, then segmentation will be
+done by var1 and var2. It is very important to enter the correct value
+here.}
 
-\item{var1}{the main variable to segment the vintage analysis by. Must be provided
-as "string" and must be a categorical variable. See Note below.}
+\item{var1}{the main variable to segment the vintage analysis by. Must be
+provided as "string" and must be a categorical variable. See Note below.}
 
-\item{var2}{if a second level of segmentation is required, this is the second level.}
+\item{var2}{if a second level of segmentation is required, this is the second
+level.}
 }
 \value{
 a data frame consisting of variables that represent the rate of roll
