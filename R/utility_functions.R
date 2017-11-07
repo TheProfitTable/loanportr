@@ -70,5 +70,21 @@ string_to_quote <- function(string) {
   enquo(str)
 }
 
-
+#' max_var
+#' @title maximum of a variable in a data frame
+#'
+#' @param data any data frame
+#' @param var the name of a variable in the data frame upon which a maximum can be computed.
+#'
+#' @return the maximum of the variable
+#' @export
+#'
+#' @examples
+#' max_month(df, "fpd_month")
+#'
+max_var <- function(data, var) {
+  dfs <- data %>%
+      select(var)
+  max(dfs[[var]])
+}
 
