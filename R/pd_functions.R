@@ -138,7 +138,7 @@ pd <- function(data = df, default_definition, loss_id_period = 12, segmenter_lev
   data <- data %>%
     arrange(., contract_key, pointintime_month) %>%
     #    pos_closing_balance(.) %>%
-    select_variables_pd_tr(., segmenter_level,segmenter_vector) %>%
+    select_variables_pd(., segmenter_level,segmenter_vector) %>%
     lead_flag(., outcome_period = loss_id_period, "default_flag")
 
   df_cohort_base <- get_cohort_base(data = data, default_definition, group_by_vector)
