@@ -63,7 +63,7 @@ vintalyse <- function(data, period_dim = "loan_period", month_dim = "orig_month"
                             c(period_dim, month_dim, var1, var2))
 
 
-    default_summary <- df %>%
+    default_summary <- data %>%
       group_by_at(group_by_vector) %>% # Define the grouping variables
       summarise( # Now you define your summary variables with a name and a function...
         total_count = n(),  # The function n() in dlpyr gives you the number of observations
