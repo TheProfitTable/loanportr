@@ -10,8 +10,8 @@
 #' @export
 #'
 #' @examples
-#' df_select <- select_variables_pd_tr(df, c("fico_bin"), 2)
-#' df_select <- select_variables_pd_tr(df,  1)
+#' df_select <- select_variables_pd(df, c("fico_bin"), 2)
+#' df_select <- select_variables_pd(df,  1)
 select_variables_pd <- function(data, segmenter_level = 1, segmenter_vector) {
 
   select_vector <- switch(segmenter_level,
@@ -144,8 +144,16 @@ pd <- function(data = df, default_definition, loss_id_period = 12, segmenter_lev
   df_cohort_base <- get_cohort_base(data = data, default_definition, group_by_vector)
   df_cohort_default <- get_cohort_default(data = data, default_definition, group_by_vector)
 
+  # if (is_missing(var1)) {
+  #   var1 <- quo(maybe_missing(var1))
+  # } else {
+  #   var1 <- string_to_quote(var1) ####added
+  # }
+
+
   df_cohort_join <-  get_cohort_join(dfx = df_cohort_base, dfy = df_cohort_default, group_by_vector) %>%
     mutate(probability_of_default = cohort_default/cohort_base)
+    # filter(!is.na(!!var1)) #####added
 
   return(df_cohort_join)
 }

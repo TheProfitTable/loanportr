@@ -28,6 +28,6 @@ selects the necessary variables from the standard data set for
   pd calculations
 }
 \examples{
-df_select <- select_variables_pd_tr(df, c("fico_bin"), 2)
-df_select <- select_variables_pd_tr(df,  1)
+df_select <- select_variables_pd(df, c("fico_bin"), 2)
+df_select <- select_variables_pd(df,  1)
 }

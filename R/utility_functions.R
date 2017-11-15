@@ -66,8 +66,8 @@ add_perc <- function(data) {
 #' input <- string_to_quote(input) #where input is a parameter entered as string
 #'
 string_to_quote <- function(string) {
-  str <- as.name(string)
-  enquo(str)
+    str <- as.name(string)
+    enquo(str)
 }
 
 #' max_var

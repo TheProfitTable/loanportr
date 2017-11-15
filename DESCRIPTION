@@ -1,7 +1,7 @@
 Package: loanportr
 Type: Package
 Title: Loan portfolio analysis in R
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: person("Naas", "van Heerden", email = "naas@theprofittable.com",
   role = c("aut", "cre"))
 Description: Functions that make reporting on and analysing a loan portfolio easy. 
@@ -12,7 +12,8 @@ LazyData: true
 Imports: 
   dplyr (>= 0.7.3), 
   rlang (>= 0.1.2), 
-  tidyr (>= 0.7.1)
+  tidyr (>= 0.7.1), 
+  lubridate (>= 1.6.0)
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
