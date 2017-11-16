@@ -44,3 +44,34 @@ over_vinta_fpd <- function(data, date, default_definition) {
        )
 }
 
+
+#' over_pd0
+#' @description overview of 12 month probability of default for 0 in arrears
+#' @inheritParams over_vinta_fpd
+#'
+#' @return a list containing the 12 month probability of default for the 0 in
+#'   arrears segment for this month and the % change in value from last month.
+#' @export
+#'
+#' @examples
+#' over_pd0(df, "2017-03-31")
+#'
+over_pd0 <- function(data, date) {
+  date12 <-    as.Date(date) %m-% months(12)
+  date13 <-    as.Date(date) %m-% months(13)
+  df <- df %>%
+    filter(pointintime_month >= date13)
+  df_pd <- pd(df, 1, 12, 1)
+  this_month_pd0 <- df_pd  %>%
+    filter(pointintime_month == date12) %>%
+    select(probability_of_default)
+  last_month_pd0 <- df_pd %>%
+    filter(pointintime_month == date13) %>%
+    select(probability_of_default)
+
+  list("this_month_pd0" = this_month_pd0[[2]],
+       "last_month_pd0" = last_month_pd0[[2]],
+       "change_pd0" = this_month_pd0[[2]] / last_month_pd0[[2]] - 1)
+
+}
+
