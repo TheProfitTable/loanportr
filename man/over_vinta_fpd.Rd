@@ -11,7 +11,7 @@ over_vinta_fpd(data, date, default_definition)
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
  dictionary} format}
 
-\item{date}{the latest performance month available}
+\item{date}{the latest point in time month of loan data available}
 
 \item{default_definition}{the default definition applicable to the loan
 portfolio}

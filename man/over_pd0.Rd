@@ -2,7 +2,7 @@
 % Please edit documentation in R/overview_functions.R
 \name{over_pd0}
 \alias{over_pd0}
-\title{over_pd0}
+\title{Overview of 12 month probability of default for 0 in arrears}
 \usage{
 over_pd0(data, date)
 }
@@ -11,14 +11,14 @@ over_pd0(data, date)
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
  dictionary} format}
 
-\item{date}{the latest performance month available}
+\item{date}{the latest point in time month of loan data available}
 }
 \value{
 a list containing the 12 month probability of default for the 0 in
   arrears segment for this month and the % change in value from last month.
 }
 \description{
-overview of 12 month probability of default for 0 in arrears
+over_pd0
 }
 \examples{
 over_pd0(df, "2017-03-31")

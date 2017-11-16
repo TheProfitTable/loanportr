@@ -3,7 +3,7 @@
 #' over_vinta_fpd
 #' @title Overview calculation for vintage analysis based on first pay date
 #' @inheritParams vintalyse
-#' @param date the latest performance month available
+#' @param date the latest point in time month of loan data available
 #' @param default_definition the default definition applicable to the loan
 #'   portfolio
 #' @return a list containing default rate for this month and the % change in
@@ -46,7 +46,7 @@ over_vinta_fpd <- function(data, date, default_definition) {
 
 
 #' over_pd0
-#' @description overview of 12 month probability of default for 0 in arrears
+#' @title Overview of 12 month probability of default for 0 in arrears
 #' @inheritParams over_vinta_fpd
 #'
 #' @return a list containing the 12 month probability of default for the 0 in
@@ -74,4 +74,58 @@ over_pd0 <- function(data, date) {
        "change_pd0" = this_month_pd0[[2]] / last_month_pd0[[2]] - 1)
 
 }
+
+#' over_sales
+#' @title Overview of this month's sales and book size
+#' @inheritParams over_vinta_fpd
+#'
+#' @return a list containing the loan sales number for this month, last month
+#'   and the % change in value from last month.
+#' @export
+#'
+#' @examples
+#' dftest <- over_sales(df, "2017-03-31")
+#' dfbk <- over_booksize(df, "2017-03-31")
+#'
+over_sales <- function(data, date) {
+  date1 <-    as.Date(date) %m-% months(1)
+  dfmonths <- df %>%
+    filter(orig_month >= date1)
+  dfsales <- dfmonths %>%
+    group_by(orig_month) %>%
+    summarise(loan_sales = sum(loan_amount))
+  this_month_sales <- dfsales[dfsales$orig_month == date, "loan_sales"]
+  last_month_sales <- dfsales[dfsales$orig_month == date1, "loan_sales"]
+
+  list("this_month_sales" = this_month_sales[[1]],
+       "last_month_sales" = last_month_sales[[1]],
+       "change_sales" = this_month_sales[[1]] / last_month_sales[[1]] - 1)
+}
+
+
+#' @describeIn over_sales Returns a list containing the book size number for
+#'   this month, last month and the % change in value from last month
+over_booksize <- function(data, date) {
+  date1 <-    as.Date(date) %m-% months(1)
+  dfmonths <- df %>%
+    filter(pointintime_month >= date1)
+  dfbooksize <- dfmonths %>%
+    group_by(pointintime_month) %>%
+    summarise(booksize = sum(closing_balance))
+  this_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date, "booksize"]
+  last_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date1, "booksize"]
+
+  list("this_month_booksize" = this_month_booksize[[1]],
+       "last_month_booksize" = last_month_booksize[[1]],
+       "change_booksize" = this_month_booksize[[1]] / last_month_booksize[[1]] - 1)
+}
+
+
+
+
+
+
+
+
+
 
