@@ -30,7 +30,7 @@ this month, last month and the % change in value from last month
 }}
 
 \examples{
-dftest <- over_sales(df, "2017-03-31")
-dfbk <- over_booksize(df, "2017-03-31")
+dftest <- over_sales(df, "2017-06-30")
+dfbk <- over_booksize(df, "2017-06-30")
 
 }

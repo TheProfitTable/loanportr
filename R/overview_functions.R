@@ -14,10 +14,10 @@
 #' dft <- over_vinta_fpd(df, "2017-08-31", 4)
 #'
 over_vinta_fpd <- function(data, date, default_definition) {
-  date12 <-    as.Date(date) %m-% months(12)
-  datedef <-   as.Date(date) %m-% months(default_definition)
-  date13 <-    as.Date(date) %m-% months(13)
-  datedef1 <-  as.Date(date) %m-% months(default_definition+1)
+  date12 <-    last_day(as.Date(date) %m-% months(12))
+  datedef <-   last_day(as.Date(date) %m-% months(default_definition))
+  date13 <-    last_day(as.Date(date) %m-% months(13))
+  datedef1 <-  last_day(as.Date(date) %m-% months(default_definition+1))
   df_datefilter <- data %>%
     filter(fpd_month %in% c(date12, datedef, date13, datedef1))
   df_vinta <- vintalyse(data = df_datefilter, "fpd_period", "fpd_month")
@@ -57,8 +57,8 @@ over_vinta_fpd <- function(data, date, default_definition) {
 #' over_pd0(df, "2017-03-31")
 #'
 over_pd0 <- function(data, date) {
-  date12 <-    as.Date(date) %m-% months(12)
-  date13 <-    as.Date(date) %m-% months(13)
+  date12 <-    as.character(last_day(as.Date(date) %m-% months(12)))
+  date13 <-    as.character(last_day(as.Date(date) %m-% months(13)))
   df <- df %>%
     filter(pointintime_month >= date13)
   df_pd <- pd(df, 1, 12, 1)
@@ -84,18 +84,24 @@ over_pd0 <- function(data, date) {
 #' @export
 #'
 #' @examples
-#' dftest <- over_sales(df, "2017-03-31")
-#' dfbk <- over_booksize(df, "2017-03-31")
+#' dftest <- over_sales(df, "2017-06-30")
+#' dfbk <- over_booksize(df, "2017-06-30")
 #'
 over_sales <- function(data, date) {
-  date1 <-    as.Date(date) %m-% months(1)
+  date1 <-    as.character(last_day(as.Date(date) %m-% months(1)))
   dfmonths <- df %>%
     filter(orig_month >= date1)
   dfsales <- dfmonths %>%
     group_by(orig_month) %>%
     summarise(loan_sales = sum(loan_amount))
-  this_month_sales <- dfsales[dfsales$orig_month == date, "loan_sales"]
-  last_month_sales <- dfsales[dfsales$orig_month == date1, "loan_sales"]
+  this_month_sales <- dfsales %>%
+    filter(orig_month == date) %>%
+    select(loan_sales)
+  last_month_sales <- dfsales %>%
+    filter(orig_month == date1) %>%
+    select(loan_sales)
+  # this_month_sales <- dfsales[dfsales$orig_month == date, "loan_sales"]
+  # last_month_sales <- dfsales[dfsales$orig_month == date1, "loan_sales"]
 
   list("this_month_sales" = this_month_sales[[1]],
        "last_month_sales" = last_month_sales[[1]],
@@ -106,13 +112,13 @@ over_sales <- function(data, date) {
 #' @describeIn over_sales Returns a list containing the book size number for
 #'   this month, last month and the % change in value from last month
 over_booksize <- function(data, date) {
-  date1 <-    as.Date(date) %m-% months(1)
+  date1 <-    as.character(last_day(as.Date(date) %m-% months(1)))
   dfmonths <- df %>%
     filter(pointintime_month >= date1)
   dfbooksize <- dfmonths %>%
     group_by(pointintime_month) %>%
     summarise(booksize = sum(closing_balance))
-  this_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date, "booksize"]
+  this_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date,  "booksize"]
   last_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date1, "booksize"]
 
   list("this_month_booksize" = this_month_booksize[[1]],

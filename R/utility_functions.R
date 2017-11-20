@@ -88,3 +88,16 @@ max_var <- function(data, var) {
   max(dfs[[var]])
 }
 
+#' @title last_day
+#' @description calculate last day of the month given a date.
+#' @param date
+#'
+#' @return last day of the month
+#' @export
+#'
+#' @examples
+#' last_day(date = as_date("2017-01-05"))
+#'
+last_day <- function(date) {
+  ceiling_date(date, "month") - days(1)
+}
