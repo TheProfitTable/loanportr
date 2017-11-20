@@ -76,7 +76,7 @@ over_pd0 <- function(data, date) {
 }
 
 #' over_sales
-#' @title Overview of this month's sales and book size
+#' @title Overview of this month's sales
 #' @inheritParams over_vinta_fpd
 #'
 #' @return a list containing the loan sales number for this month, last month
@@ -85,7 +85,6 @@ over_pd0 <- function(data, date) {
 #'
 #' @examples
 #' dftest <- over_sales(df, "2017-06-30")
-#' dfbk <- over_booksize(df, "2017-06-30")
 #'
 over_sales <- function(data, date) {
   date1 <-    as.character(last_day(as.Date(date) %m-% months(1)))
@@ -109,8 +108,18 @@ over_sales <- function(data, date) {
 }
 
 
-#' @describeIn over_sales Returns a list containing the book size number for
-#'   this month, last month and the % change in value from last month
+
+#' over_booksize
+#' @title Overview of this month's book size
+#' @inheritParams over_sales
+#'
+#' @return a list containing the booksize number for this month, last month
+#'   and the % change in value from last month.
+#' @export
+#'
+#' @examples
+#' #' dfbk <- over_booksize(df, "2017-06-30")
+#'
 over_booksize <- function(data, date) {
   date1 <-    as.character(last_day(as.Date(date) %m-% months(1)))
   dfmonths <- df %>%
