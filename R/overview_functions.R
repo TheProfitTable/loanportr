@@ -127,7 +127,7 @@ over_booksize <- function(data, date) {
     filter(pointintime_month >= date1)
   dfbooksize <- dfmonths %>%
     group_by(pointintime_month) %>%
-    summarise(booksize = sum(closing_balance))
+    summarise(booksize = sum(net_advance))
   this_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date,  "booksize"]
   last_month_booksize <- dfbooksize[dfbooksize$pointintime_month == date1, "booksize"]
 
