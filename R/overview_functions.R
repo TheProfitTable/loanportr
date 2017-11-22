@@ -84,10 +84,11 @@ over_pd0 <- function(data, date) {
 #' @export
 #'
 #' @examples
-#' dftest <- over_sales(df, "2017-06-30")
+#' dftest <- over_sales(df, "2017-07-31")
 #'
 over_sales <- function(data, date) {
   date1 <-    as.character(last_day(as.Date(date) %m-% months(1)))
+  df <- make_orig(data)
   dfmonths <- df %>%
     filter(orig_month >= date1)
   dfsales <- dfmonths %>%
@@ -122,7 +123,7 @@ over_sales <- function(data, date) {
 #'
 over_booksize <- function(data, date) {
   date1 <-    as.character(last_day(as.Date(date) %m-% months(1)))
-  dfmonths <- df %>%
+  dfmonths <- data %>%
     filter(pointintime_month >= date1)
   dfbooksize <- dfmonths %>%
     group_by(pointintime_month) %>%
