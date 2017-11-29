@@ -59,7 +59,7 @@ make_orig <- function(data, use_period = FALSE, period = loan_period, period_num
 
 
 #' @describeIn vardistr_perc This only returns the amounts in each var level and the Total
-vardistr_amnt <- function(data, var, weight, datedim, ...) {
+vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2, ...) {
 
   if (datedim == "pointintime_month") {
     df_orig <- data
@@ -73,22 +73,31 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
     weight <- as.name(eval(weight))
   }
 
-  var <- as.name(eval(var))
-  datedim <- as.name(eval(datedim))
+  # var <- as.name(eval(var))
 
-  var <- enquo(var)
-  datedim <- enquo(datedim)
+  datedim <- string_to_quote(datedim)
+  var1 <- string_to_quote(var1)
+  # var <- enquo(var)
+
   weight <- enquo(weight)
 
-  df_sales_vintage <- df_orig %>%
-    count(., !!var, !!datedim, wt = !!weight) %>%
-    filter(!is.na(!!var)) %>%
-    spread(!!var, n)
-
-  ncol <- ncol(df_sales_vintage)
-  #names <- names(df_sales_vintage)
-
-  df_sales_vintage$total <- apply(X = df_sales_vintage[,c(2:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
+  if (segmenter_level == 3) {
+    var2 <- string_to_quote(var2)
+    df_sales_vintage <- df_orig %>%
+      count(., !!var1, !!var2, !!datedim, wt = !!weight) %>%
+      filter(!is.na(!!var1)) %>%
+      filter(!is.na(!!var2)) %>%
+      spread(!!var2, n) # will need to filter on var1 when using output
+    ncol <- ncol(df_sales_vintage)
+    df_sales_vintage$total <- apply(X = df_sales_vintage[,c(3:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
+  } else {
+    df_sales_vintage <- df_orig %>%
+      count(., !!var1, !!datedim, wt = !!weight) %>%
+      filter(!is.na(!!var1)) %>%
+      spread(!!var1, n)
+    ncol <- ncol(df_sales_vintage)
+    df_sales_vintage$total <- apply(X = df_sales_vintage[,c(2:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
+  }
 
   return(df_sales_vintage)
 }
@@ -124,19 +133,38 @@ vardistr_amnt <- function(data, var, weight, datedim, ...) {
 #' df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period=fpd_period)
 #' df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month")
 #'
-#' x <- vardistr_perc(df, "disclosure", "net_advance", "pointintime_month")
+#' x <- vardistr_perc(data = df, var1 = "disclosure", weight = "net_advance", datedim = "pointintime_month", segmenter_level = 2)
 #' x <- vardistr_perc(df, "fico_bin", "closing_balance", "pointintime_month")
 #'
-vardistr_perc <- function(data, var, weight, datedim, ...) {
+vardistr_perc <- function(data, var1, var2, weight, datedim, segmenter_level = 2, ...) {
 
   #var <- enquo(var)
   #datedim <- enquo(datedim)
   #weight <- enquo(weight)
 
-  df_vda <- vardistr_amnt(data, var, weight, datedim, ...)
+  df_vda <- vardistr_amnt(data, var1, var2, weight, datedim, segmenter_level, ...)
 
   return(add_perc(df_vda))
 }
+
+
+
+# ========================
+# temp
+
+# df_orig <- make_orig(df)
+#
+# df_sales_vintage_last <- df_orig %>%
+#   count(., country, term, orig_month, wt = loan_amount) %>%
+#   filter(!is.na(country)) %>%
+#   filter(!is.na(term)) %>%
+#   spread(key = term, value = n)
+
+
+
+
+
+
 
 
 

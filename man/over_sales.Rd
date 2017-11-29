@@ -21,6 +21,6 @@ a list containing the loan sales number for this month, last month
 over_sales
 }
 \examples{
-dftest <- over_sales(df, "2017-06-30")
+dftest <- over_sales(df, "2017-07-31")
 
 }
