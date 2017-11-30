@@ -26,6 +26,7 @@ is_null_string <- function(w) {
 #'   column, followed by the levels of some categorical variable that makes up a
 #'   total, which is the last column. Typically a data frame created by the
 #'   \code{\link{vardistr_amnt}} function.
+#'   @param start_col start start summing across  from this column number
 #'
 #' @return the same data frame plus a column starting with "perc" for each of
 #'   the existing variables. These added variables will add up to 100% if they
@@ -33,15 +34,15 @@ is_null_string <- function(w) {
 #' @export
 #'
 #' @examples
-#' x <- add_perc(df_vda)
+#' x <- add_perc(df_vda, 2)
 #'
-add_perc <- function(data) {
+add_perc <- function(data, start_col) {
 
   df_amnt <- data
 
   ncol <- ncol(df_amnt) - 1
 
-  for (i in 2:ncol) {
+  for (i in start_col:ncol) {
     name  <- as.name(names(df_amnt[i])) # as name
     nname <- paste0("perc_", names(df_amnt[i])) # as string
 

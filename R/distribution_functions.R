@@ -88,16 +88,18 @@ vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2
       filter(!is.na(!!var1)) %>%
       filter(!is.na(!!var2)) %>%
       spread(!!var2, n) # will need to filter on var1 when using output
-    ncol <- ncol(df_sales_vintage)
-    df_sales_vintage$total <- apply(X = df_sales_vintage[,c(3:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
+    # ncol <- ncol(df_sales_vintage)
+    # df_sales_vintage$total <- apply(X = df_sales_vintage[,c(3:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
   } else {
     df_sales_vintage <- df_orig %>%
       count(., !!var1, !!datedim, wt = !!weight) %>%
       filter(!is.na(!!var1)) %>%
       spread(!!var1, n)
-    ncol <- ncol(df_sales_vintage)
-    df_sales_vintage$total <- apply(X = df_sales_vintage[,c(2:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
+
   }
+
+  ncol <- ncol(df_sales_vintage)
+  df_sales_vintage$total <- apply(X = df_sales_vintage[,c(segmenter_level:ncol)], MARGIN =  1, FUN = sum, na.rm = TRUE)
 
   return(df_sales_vintage)
 }
@@ -110,8 +112,13 @@ vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 #' @param data a monthly loan performance level data frame in standard
 #'   \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
 #'    dictionary}  format
-#' @param var the variable by which you wish to show the monthly distribution.
-#'   Must be a "string".
+#' @param var1 the main (first) variable by which you wish to show the monthly
+#'   distribution. Must be a "string". When segmenter_level = 2 then the levels
+#'   of this variable are spread across the data frame. If segmenter_variable is
+#'   = 3 then the unique levels of this variable are in the first column of the
+#'   resultant data frame.
+#' @param var2 Only used when segmenter_level = 3. The unique levels of this
+#'   variable are then spread across the resultant data frame.
 #' @param weight either "NULL" or a weight variable such as "loan_amount" or
 #'   "closingbalance". When "NULL" the weight is count of contracts. Note, must
 #'   be entered as a "string".
@@ -119,6 +126,9 @@ vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 #'   Usually "orig_month" or "fpd_month". "pointintime_month" is used when point
 #'   in time distributions want to be done over time (book analysis). Must be
 #'   entered as a "string".
+#' @param segmenter_level Default is = 2. Then only one level of segmentation
+#'   (distribution over time) is done. If = 3 then two levels of segmentation
+#'   are done, var1 being the main level and var 2 the sub-level.
 #' @param ... parameters used in \code{\link{make_orig}} function.
 #'
 #' @return a data frame with unique datedim in first column. other columns are
@@ -127,14 +137,11 @@ vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 #' @export
 #'
 #' @examples
-#' df_vdp_test <- vardistr_perc(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period = fpd_period)
-#' df_vdp_test <- vardistr_perc(df, "fico_bin", "NULL", "fpd_month")
+#' f_vdp_test <- vardistr_perc(data = df, var1 = "country", weight = "net_advance",
+#' datedim = "pointintime_month", segmenter_level = 2, use_period = TRUE, period = fpd_period)
 #'
-#' df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period=fpd_period)
-#' df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month")
-#'
-#' x <- vardistr_perc(data = df, var1 = "disclosure", weight = "net_advance", datedim = "pointintime_month", segmenter_level = 2)
-#' x <- vardistr_perc(df, "fico_bin", "closing_balance", "pointintime_month")
+#' x <- vardistr_perc(data = df, var1 = "disclosure",
+#' weight = "net_advance", datedim = "pointintime_month", segmenter_level = 2)
 #'
 vardistr_perc <- function(data, var1, var2, weight, datedim, segmenter_level = 2, ...) {
 
@@ -144,21 +151,11 @@ vardistr_perc <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 
   df_vda <- vardistr_amnt(data, var1, var2, weight, datedim, segmenter_level, ...)
 
-  return(add_perc(df_vda))
+  return(add_perc(df_vda, segmenter_level))
 }
 
 
 
-# ========================
-# temp
-
-# df_orig <- make_orig(df)
-#
-# df_sales_vintage_last <- df_orig %>%
-#   count(., country, term, orig_month, wt = loan_amount) %>%
-#   filter(!is.na(country)) %>%
-#   filter(!is.na(term)) %>%
-#   spread(key = term, value = n)
 
 
 

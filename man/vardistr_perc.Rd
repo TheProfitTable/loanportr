@@ -5,17 +5,23 @@
 \alias{vardistr_perc}
 \title{Variable distribution over time}
 \usage{
-vardistr_amnt(data, var, weight, datedim, ...)
+vardistr_amnt(data, var1, var2, weight, datedim, segmenter_level = 2, ...)
 
-vardistr_perc(data, var, weight, datedim, ...)
+vardistr_perc(data, var1, var2, weight, datedim, segmenter_level = 2, ...)
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
 \href{https://github.com/TheProfitTable/masterlibrary/blob/master/tpt_credit_datadictionary.Rmd}{data
  dictionary}  format}
 
-\item{var}{the variable by which you wish to show the monthly distribution.
-Must be a "string".}
+\item{var1}{the main (first) variable by which you wish to show the monthly
+distribution. Must be a "string". When segmenter_level = 2 then the levels
+of this variable are spread across the data frame. If segmenter_variable is
+= 3 then the unique levels of this variable are in the first column of the
+resultant data frame.}
+
+\item{var2}{Only used when segmenter_level = 3. The unique levels of this
+variable are then spread across the resultant data frame.}
 
 \item{weight}{either "NULL" or a weight variable such as "loan_amount" or
 "closingbalance". When "NULL" the weight is count of contracts. Note, must
@@ -25,6 +31,10 @@ be entered as a "string".}
 Usually "orig_month" or "fpd_month". "pointintime_month" is used when point
 in time distributions want to be done over time (book analysis). Must be
 entered as a "string".}
+
+\item{segmenter_level}{Default is = 2. Then only one level of segmentation
+(distribution over time) is done. If = 3 then two levels of segmentation
+are done, var1 being the main level and var 2 the sub-level.}
 
 \item{...}{parameters used in \code{\link{make_orig}} function.}
 }
@@ -45,13 +55,10 @@ vardistr_perc
 }}
 
 \examples{
-df_vdp_test <- vardistr_perc(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period = fpd_period)
-df_vdp_test <- vardistr_perc(df, "fico_bin", "NULL", "fpd_month")
+f_vdp_test <- vardistr_perc(data = df, var1 = "country", weight = "net_advance",
+datedim = "pointintime_month", segmenter_level = 2, use_period = TRUE, period = fpd_period)
 
-df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month", use_period = TRUE, period=fpd_period)
-df_vda <- vardistr_amnt(df, "fico_bin", "loan_amount", "orig_month")
-
-x <- vardistr_perc(df, "disclosure", "net_advance", "pointintime_month")
-x <- vardistr_perc(df, "fico_bin", "closing_balance", "pointintime_month")
+x <- vardistr_perc(data = df, var1 = "disclosure",
+weight = "net_advance", datedim = "pointintime_month", segmenter_level = 2)
 
 }

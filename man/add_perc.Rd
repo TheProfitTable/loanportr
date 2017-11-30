@@ -4,13 +4,14 @@
 \alias{add_perc}
 \title{add_perc}
 \usage{
-add_perc(data)
+add_perc(data, start_col)
 }
 \arguments{
 \item{data}{A data frame that has a date or similar variable as its first
 column, followed by the levels of some categorical variable that makes up a
 total, which is the last column. Typically a data frame created by the
-\code{\link{vardistr_amnt}} function.}
+\code{\link{vardistr_amnt}} function.
+@param start_col start start summing across  from this column number}
 }
 \value{
 the same data frame plus a column starting with "perc" for each of
@@ -21,6 +22,6 @@ the same data frame plus a column starting with "perc" for each of
 adds percentage distribution columns to a summarised data frame
 }
 \examples{
-x <- add_perc(df_vda)
+x <- add_perc(df_vda, 2)
 
 }
