@@ -7,7 +7,8 @@
 \usage{
 vardistr_amnt(data, var1, var2, weight, datedim, segmenter_level = 2, ...)
 
-vardistr_perc(data, var1, var2, weight, datedim, segmenter_level = 2, ...)
+vardistr_perc(data, var1, var2, weight, datedim, segmenter_level = 2, ...,
+  use_cpp = TRUE)
 }
 \arguments{
 \item{data}{a monthly loan performance level data frame in standard
@@ -37,6 +38,9 @@ entered as a "string".}
 are done, var1 being the main level and var 2 the sub-level.}
 
 \item{...}{parameters used in \code{\link{make_orig}} function.}
+
+\item{use_cpp}{either TRUE or FALSE. Default is TRUE, uses
+an optimized c++ version of the function. Will run pure R version if set to FALSE.}
 }
 \value{
 a data frame with unique datedim in first column. other columns are

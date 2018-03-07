@@ -22,6 +22,9 @@ the same data frame plus a column starting with "perc" for each of
 The c++ version of \code{\link{add_perc}} function.
   Adds percentage distribution columns to a summarised data frame
 }
+\details{
+Important to include @useDynLib <packagename> to export 'useDynLib(loanportr)' line in NAMESPACE when running devtools::document()
+}
 \examples{
 x <- add_perc_cpp(df, 2)
 

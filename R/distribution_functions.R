@@ -132,6 +132,9 @@ vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 #'   are done, var1 being the main level and var 2 the sub-level.
 #' @param ... parameters used in \code{\link{make_orig}} function.
 #'
+#' @param use_cpp either TRUE or FALSE. Default is TRUE, uses
+#'   an optimized c++ version of the function. Will run pure R version if set to FALSE.
+#'
 #' @return a data frame with unique datedim in first column. other columns are
 #'   the various levels of the var parameter. There is also a Total variable
 #'   that contains the total of the weight parameter.
@@ -144,7 +147,7 @@ vardistr_amnt <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 #' x <- vardistr_perc(data = df, var1 = "disclosure",
 #' weight = "net_advance", datedim = "pointintime_month", segmenter_level = 2)
 #'
-vardistr_perc <- function(data, var1, var2, weight, datedim, segmenter_level = 2, ...) {
+vardistr_perc <- function(data, var1, var2, weight, datedim, segmenter_level = 2, ..., use_cpp = TRUE) {
 
   #var <- enquo(var)
   #datedim <- enquo(datedim)
@@ -152,7 +155,11 @@ vardistr_perc <- function(data, var1, var2, weight, datedim, segmenter_level = 2
 
   df_vda <- vardistr_amnt(data, var1, var2, weight, datedim, segmenter_level, ...)
 
-  return(add_perc(df_vda, segmenter_level))
+  if(use_cpp){
+    return(add_perc_cpp(df_vda, segmenter_level)) # use the c++ version of 'add_perc'
+  }else{
+    return(add_perc(df_vda, segmenter_level))
+  }
 }
 
 
