@@ -11,8 +11,9 @@ using namespace Rcpp;
 //   http://gallery.rcpp.org/
 //
 
-
-
+//' Important to include @useDynLib <packagename> to export 'useDynLib(loanportr)' line in NAMESPACE when running devtools::document()
+//' @useDynLib loanportr
+//'
 //' @title add_perc_cpp
 //' @description The c++ version of \code{\link{add_perc}} function.
 //'   Adds percentage distribution columns to a summarised data frame
