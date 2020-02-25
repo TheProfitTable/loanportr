@@ -53,5 +53,7 @@ We make use of GitHub issues to track tasks and log bugs, changes of fixes neede
 We want you! ...to:    
 
 * to use loanportr and give us feedback 
-* collaborate with us in building an awesome tool! 
+* collaborate with us in building an awesome tool!
+
+ 
 
